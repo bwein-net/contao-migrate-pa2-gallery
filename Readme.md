@@ -17,14 +17,28 @@ After the installation you can run the migration via console `contao:migrate` or
 
 > Attention: The tables of the new extension `bwein-net/contao-gallery` must to be empty!
 
-Only the archives and albums are migrated.
-The frontend modules must to be manually configured.
+## Edit settings and data
 
-> Attention: Some features such as protected or sorted albums are not implemented in the new extension. To support multiple languages, you need to create a category for each language!
+Since only the archives and albums are being migrated, some settings and data need to be edited.
+
+Please configure or check the following manually:
+
+- redirect pages of gallery categories
+- frontend modules with all options
+  - gallery list with template `album_simple` or `album_latest`
+  - gallery reader with template `album_full`
+- template customization - especially  `album_latest` and `album_full`
+  - adjust the meta info (event, place, photographer)
+- css customization
+- user permissions
+  - permissions for gallery categories
+  - allowed table fields of `tl_bwein_gallery_category` and `tl_bwein_gallery`
+- protected categories (member groups are now only supported and no longer explicit members)
+- categories for each language - please install: [terminal42/contao-changelanguage](https://packagist.org/packages/terminal42/contao-changelanguage)
 
 ## Uninstall extensions
 
-After running the migration you can and should uninstall both extensions:
+Once you've completed the migration and set up the galleries, you can and should uninstall both extensions:
 
 ```
 composer remove bwein-net/contao-migrate-pa2-gallery
