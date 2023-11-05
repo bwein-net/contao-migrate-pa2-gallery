@@ -20,6 +20,8 @@ class Pa2AlbumGalleryMigration implements MigrationInterface
 {
     private Connection $connection;
 
+    private array $translations = [];
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -46,9 +48,12 @@ class Pa2AlbumGalleryMigration implements MigrationInterface
 
     public function run(): MigrationResult
     {
-        $statement = $this->connection->executeQuery('SELECT * FROM tl_photoalbums2_album');
+        $this->loadTranslations();
+        $statement = $this->connection->prepare('SELECT * FROM tl_photoalbums2_album');
+        $result = $statement->executeQuery();
+        $rows = $result->fetchAllAssociative();
 
-        while (false !== ($row = $statement->fetchAssociative())) {
+        foreach ($rows as $row) {
             $statementInsert = $this->connection->prepare(
                 'INSERT INTO `tl_bwein_gallery` (
                     `id`,
@@ -112,10 +117,10 @@ class Pa2AlbumGalleryMigration implements MigrationInterface
                     'sortBy' => $this->mapSortBy($row['imageSortType']),
                     'previewImageType' => $row['previewImageType'],
                     'previewImage' => $row['previewImage'],
-                    'event' => $this->getTranslationsField((int) $row['event']),
-                    'place' => $this->getTranslationsField((int) $row['place']),
-                    'photographer' => $this->getTranslationsField((int) $row['photographer']),
-                    'description' => $this->getTranslationsField((int) $row['description']),
+                    'event' => $this->getTranslation((int) $row['event']),
+                    'place' => $this->getTranslation((int) $row['place']),
+                    'photographer' => $this->getTranslation((int) $row['photographer']),
+                    'description' => $this->getTranslation((int) $row['description']),
                     'cssClass' => $row['cssClass'],
                     'start' => $row['start'],
                     'stop' => $row['stop'],
@@ -151,23 +156,29 @@ class Pa2AlbumGalleryMigration implements MigrationInterface
         }
     }
 
-    private function getTranslationsField(int $fieldId): string
+    private function loadTranslations(): void
+    {
+        $schemaManager = $this->connection->createSchemaManager();
+
+        if (null === $schemaManager || !$schemaManager->tablesExist(['tl_translation_fields'])) {
+            return;
+        }
+        $statement = $this->connection->executeQuery(
+            "SELECT fid, GROUP_CONCAT(content SEPARATOR ';') FROM tl_translation_fields GROUP BY fid",
+        );
+        $this->translations = $statement->fetchAllKeyValue();
+    }
+
+    private function getTranslation(int $fieldId): string
     {
         if (0 === $fieldId) {
             return '';
         }
 
-        $schemaManager = $this->connection->createSchemaManager();
-
-        if (null === $schemaManager || !$schemaManager->tablesExist(['tl_translation_fields'])) {
+        if (!\array_key_exists($fieldId, $this->translations)) {
             return '';
         }
-        $statement = $this->connection->executeQuery(
-            'SELECT content FROM tl_translation_fields WHERE fid = :fieldId',
-            ['fieldId' => $fieldId],
-        );
-        $content = $statement->fetchFirstColumn();
 
-        return implode('; ', $content);
+        return $this->translations[$fieldId];
     }
 }

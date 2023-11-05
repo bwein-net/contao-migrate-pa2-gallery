@@ -46,9 +46,11 @@ class Pa2ArchiveGalleryCategoryMigration implements MigrationInterface
 
     public function run(): MigrationResult
     {
-        $statement = $this->connection->executeQuery('SELECT * FROM tl_photoalbums2_archive');
+        $statement = $this->connection->prepare('SELECT * FROM tl_photoalbums2_archive');
+        $result = $statement->executeQuery();
+        $rows = $result->fetchAllAssociative();
 
-        while (false !== ($row = $statement->fetchAssociative())) {
+        foreach ($rows as $row) {
             $statementInsert = $this->connection->prepare(
                 'INSERT INTO `tl_bwein_gallery_category` (
                     `id`,
