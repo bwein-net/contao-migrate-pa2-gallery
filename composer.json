@@ -1,0 +1,66 @@
+{
+  "name": "bwein-net/contao-migrate-pa2-gallery",
+  "description": "Migration of photoalbums2 to gallery for Contao Open Source CMS",
+  "keywords": [
+    "contao",
+    "migrate",
+    "migration",
+    "craffft",
+    "photoalbums2",
+    "pa2",
+    "bwein",
+    "gallery",
+    "album",
+    "photos"
+  ],
+  "type": "contao-bundle",
+  "homepage": "https://github.com/bwein-net/contao-migrate-pa2-gallery",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "bwein.net",
+      "homepage": "https://bwein.net/",
+      "role": "Developer"
+    },
+    {
+      "name": "Ralf Baussenwein",
+      "homepage": "https://github.com/rabauss",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/bwein-net/contao-migrate-pa2-gallery/issues",
+    "source": "https://github.com/bwein-net/contao-migrate-pa2-gallery"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/rabauss"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "contao/core-bundle": "^4.13 || ^5.0",
+    "symfony/config": "^5.4 || ^6.0",
+    "symfony/dependency-injection": "^5.4 || ^6.0",
+    "symfony/http-kernel": "^5.4 || ^6.0"
+  },
+  "require-dev": {
+    "bwein-net/contao-gallery": "^1.0",
+    "contao/manager-plugin": "^2.0",
+    "craffft/contao-photoalbums2": "^2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Bwein\\MigratePa2Gallery\\": "src/"
+    }
+  },
+  "extra": {
+    "contao-manager-plugin": "Bwein\\MigratePa2Gallery\\ContaoManager\\Plugin"
+  },
+  "scripts": {
+    "ecs": [
+      "@php tools/ecs/vendor/bin/ecs check src/ --fix --ansi"
+    ]
+  }
+}

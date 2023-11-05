@@ -1,0 +1,9 @@
+# Dev-Tools
+.idea
+
+# Composer
+/vendor/
+composer.lock
+/tools/*/vendor
+/tools/ecs/composer.lock
+
