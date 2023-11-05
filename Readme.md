@@ -1,8 +1,7 @@
-# Migration of short URLs to URL rewrites for Contao Open Source CMS
+# Migration of photoalbums2 to gallery for Contao Open Source CMS
 
-Since the extension [fritzmg/contao-short-urls](https://packagist.org/packages/fritzmg/contao-short-urls) has been
-abandoned, you should use [terminal42/contao-url-rewrite](https://packagist.org/packages/terminal42/contao-url-rewrite).
-This bundle provides a migration for short URLs to URL rewrites.
+Since the extension [craffft/contao-photoalbums2](https://packagist.org/packages/craffft/contao-photoalbums2) is not maintained and does not support Contao 5, you can use [bwein-net/contao-gallery](https://packagist.org/packages/bwein-net/contao-gallery).
+This bundle provides a migration for photoalbums2 to gallery.
 
 ## Installation
 
@@ -16,13 +15,18 @@ composer require bwein-net/contao-migrate-pa2-gallery
 
 After the installation you can run the migration via console `contao:migrate` or you open the contao install tool.
 
-> Attention: You should not run the database migration which removes the auxiliary column `migrated` from `tl_short_urls`, because the migration of this extension will run again!
+> Attention: The tables of the new extension `bwein-net/contao-gallery` must to be empty!
+
+Only the archives and albums are migrated.
+The frontend modules must to be manually configured.
+
+> Attention: Some features such as protected or sorted albums are not implemented in the new extension. To support multiple languages, you need to create a category for each language!
 
 ## Uninstall extensions
 
-After running the migration you can savely and should uninstall both extensions:
+After running the migration you can and should uninstall both extensions:
 
 ```
 composer remove bwein-net/contao-migrate-pa2-gallery
-composer remove fritzmg/contao-short-urls
+composer remove craffft/contao-photoalbums2
 ```
